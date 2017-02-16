@@ -1,0 +1,70 @@
+---
+title: "Stan"
+output: html_document
+---
+
+```{r, eval=FALSE}
+install.packages("rstan")
+```
+
+### Nuestros datos
+
+Nuestro objetivo es predecir la variable `prestige` a partir de las variables `income` y `education`.
+```{r}
+library(car)
+data(Duncan)
+head(Duncan)
+```
+
+Exploración previa de los datos
+
+```{r, cache=TRUE}
+library(GGally)
+ggpairs(Duncan)
+```
+
+### La solución frecuentista
+
+```{r}
+mod <- lm(
+  prestige ~ income + education,
+  data = Duncan
+)
+summary(mod)
+```
+
+```{r}
+plot(predict(mod), Duncan$prestige)
+abline(coef = c(0,1), col="red")
+```
+
+
+### Versión bayesiana usando Rstan
+
+Lo primero que hay que hacer es crear un archivo de tipo `.stan` en el lenguaje de STAN que especifica el modelo de regresión.
+
+Para correr necesitamos un archivo y una lista de datos. El archivo esta en `model.stan`
+
+```{r}
+# Este codigo es solo para ver el archivo en markdown
+readLines("model.stan")
+```
+
+Necesitamos crear la lista de datos
+
+```{r}
+data_list <- list(
+  N = nrow(Duncan),
+  edu = Duncan$education,
+  inc = Duncan$income,
+  prestige = Duncan$prestige
+)
+stan_fit <- stan(
+  file = "model.stan",
+  data = data_list,
+  iter = 150,
+  warmup = 50,
+  chains = 2
+)
+```
+

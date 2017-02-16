@@ -1,0 +1,80 @@
+---
+title: "CadenasMarkov"
+output: html_document
+---
+
+Vamos a ver el ejemplo más simple de una cadena de Makov.
+
+```{r}
+trans_mat <- matrix(
+  c(0.7, 0.3,
+    0.9, 0.1),
+  byrow = TRUE,
+  ncol = 2,
+  nrow = 2,
+  dimnames = list(
+    c("sol", "lluvia"),
+    c("sol", "lluvia")
+  )
+)
+trans_mat
+```
+
+
+### Simulaciones de un día
+
+Imaginen que conociendo el clima del día de hoy, queremos "simular" el clima del dia de mañana.
+
+Por ejemplo, si el clima de hoy es "sol", podemos simular el clima de mañana, necesitamos las probabilidades de transición de empezar en sol que son
+
+```{r}
+trans_mat["sol", ]
+```
+
+Por lo tanto, una simulación de mañana es
+
+```{r}
+sample(
+  x = c("sol", "lluvia"),
+  size = 1,
+  prob = trans_mat["sol", ]
+)
+```
+
+### Simular los siguientes 10 días
+
+Necesitamos una simulación iterativa
+
+```{r}
+estados <- c("sol")
+for (i in 1:10) {
+  estados[i+1] = sample(
+    x = c("sol", "lluvia"),
+    size = 1,
+    prob = trans_mat[estados[i], ]
+  )
+}
+estados
+```
+
+### Fracción de días con lluvia y sol en el largo plazo
+
+Vamos a similar muchos días
+
+```{r}
+estados <- c("sol")
+for (i in 1:10000) {
+  estados[i+1] = sample(
+    x = c("sol", "lluvia"),
+    size = 1,
+    prob = trans_mat[estados[i], ]
+  )
+}
+table(estados)
+```
+
+En el largo plazo se estabiliza la proporción de veces que la cadena visita cada estado. Esta proporción de largo plazo se conoce como **DISTRIBUCIÓN LÍMITE** o **DISTRIBUCIÓN ESTACIONARIA**.
+
+Las cadenas que tienen distribución límite se llaman **ERGÓDICAS**, son el tipo más bonito de cadenas.
+
+Por cultura general, tienen que ver con eigenvectores. La distribución límite es un eigenvector de la matriz de transición.

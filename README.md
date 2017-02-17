@@ -15,7 +15,7 @@ Su proyecto deberá tener cuatro secciones
 
 Formato de entrega: **.pdf**
 
-Fecha de entrega: **26 de febrero de 2017 11:59pm**
+Fecha de entrega: **26 de febrero de 2017 11:59pm** por correo electrónico
 
 Si tienen dudas pueden contactarme a mi correo: mauricio.garcia@itam.mx
  

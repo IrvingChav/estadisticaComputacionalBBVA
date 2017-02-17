@@ -3,10 +3,6 @@ title: "Stan"
 output: html_document
 ---
 
-```{r, eval=FALSE}
-install.packages("rstan")
-```
-
 ### Nuestros datos
 
 Nuestro objetivo es predecir la variable `prestige` a partir de las variables `income` y `education`.
@@ -33,9 +29,11 @@ mod <- lm(
 summary(mod)
 ```
 
-```{r}
+```{r, fig.width=5, fig.height=4}
+{
 plot(predict(mod), Duncan$prestige)
 abline(coef = c(0,1), col="red")
+}
 ```
 
 
@@ -52,7 +50,8 @@ readLines("model.stan")
 
 Necesitamos crear la lista de datos
 
-```{r}
+```{r, cache=TRUE, results='hide'}
+library(rstan)
 data_list <- list(
   N = nrow(Duncan),
   edu = Duncan$education,
@@ -67,4 +66,3 @@ stan_fit <- stan(
   chains = 2
 )
 ```
-
